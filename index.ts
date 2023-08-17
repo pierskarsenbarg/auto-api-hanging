@@ -4,7 +4,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as apigateway from '@pulumi/aws-apigateway';
 
 const projectName = 'apigw-test';
-(async () => {
+const run = async () => {
   const pulumiProgram = async () => {
     const role = new aws.iam.Role(`${projectName}-iam-role`, {
       assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(aws.iam.Principals.LambdaPrincipal),
@@ -40,4 +40,11 @@ const projectName = 'apigw-test';
   await stack.setConfig('aws:region', { value: 'eu-west-2' });
   await stack.up({ onOutput: console.log, logVerbosity: 10, logToStdErr: true });
   // await stack.destroy({ onOutput: console.log });
-})();
+};
+
+run()
+  .then(x => process.exit(0))
+  .catch(error => {
+    console.log(error);
+    process.exit(1);
+  })
